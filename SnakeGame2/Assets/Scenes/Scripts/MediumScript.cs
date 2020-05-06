@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Snakes;
 
-namespace Snakes
+namespace Medium
 {
-    public class GameManager : MonoBehaviour
+    public class MediumScript : MonoBehaviour
     {
         public int maxHeight = 20;
         public int maxWidth = 20;
@@ -23,6 +25,7 @@ namespace Snakes
         Node prevPlayerNode;
         Node appleNode;
         Sprite playerSprite;
+        
 
         public Text currentScoreText;
         public Text highScoreText;
@@ -45,7 +48,7 @@ namespace Snakes
         public bool isGameOver;
         public bool isFirstInput;
 
-        public float moveRate = 0.5f;
+        public float moveRate = 0.3f;
         float timer;
 
         Direction targetDirection;
@@ -63,7 +66,7 @@ namespace Snakes
         #region Init
         private void Start()
         {
-            
+
             onStart.Invoke();
         }
         public void StartNewGame()
@@ -80,18 +83,18 @@ namespace Snakes
         }
         public void ClearReferences()
         {
-            if(mapObject != null)
+            if (mapObject != null)
                 Destroy(mapObject);
 
-            if(playerObj != null)
+            if (playerObj != null)
                 Destroy(playerObj);
 
-            if(appleObj != null)
+            if (appleObj != null)
                 Destroy(appleObj);
 
             foreach (var t in tail)
             {
-                if(t.obj != null)
+                if (t.obj != null)
                     Destroy(t.obj);
             }
             tail.Clear();
@@ -163,7 +166,7 @@ namespace Snakes
             playerObj.transform.position = GetNode(3, 3).worldPosition;
             playerNode = GetNode(3, 3);
             PlacePlayerObject(playerObj, playerNode.worldPosition);
-            playerObj.transform.localScale = Vector3.one * .95f; 
+            playerObj.transform.localScale = Vector3.one * .95f;
 
 
             tailParent = new GameObject("tailParent");
@@ -315,7 +318,7 @@ namespace Snakes
                     if (isScore)
                     {
                         currentScore++;
-                        if(currentScore >= highScore)
+                        if (currentScore >= highScore)
                         {
                             highScore = currentScore;
                         }
