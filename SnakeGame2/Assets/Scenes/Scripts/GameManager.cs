@@ -1,38 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace Snakes
 {
     public class GameManager : MonoBehaviour
     {
         public int maxHeight = 20;
         public int maxWidth = 20;
-
         public Color color1;
         public Color color2;
         public Color appleColor = Color.red;
         public Color playerColor = Color.gray;
-
         public Transform cameraHolder;
 
         GameObject playerObj;
-        Node playerNode;
-
+        GameObject tailParent;
         GameObject appleObj;
+        Node playerNode;
+        Node prevPlayerNode;
         Node appleNode;
+        Sprite playerSprite;
 
         List<Node> availableNodes = new List<Node>();
-
 
         GameObject mapObject;
         SpriteRenderer mapRenderer;
 
         Node[,] grid;
+
+        List<SpecialNode> tail = new List<SpecialNode>();
+
         bool up, left, right, down;
+
         public float moveRate = 0.5f;
         float timer;
+
+        Direction targetDirection;
         Direction curDirection;
+
         public enum Direction
         {
             up, down, left, right
@@ -44,7 +49,7 @@ namespace Snakes
             PlacePlayer();
             PlaceCamera();
             CreateApple();
-            curDirection = Direction.right;
+            targetDirection = Direction.right;
         }
 
         void CreateMap()
@@ -58,17 +63,16 @@ namespace Snakes
                 for (int y = 0; y < maxHeight; y++)
                 {
                     Vector3 tp = Vector3.zero;
-                    tp.x = x + 1;
-                    tp.y = y + 1;
+                    tp.x = x;
+                    tp.y = y;
+
                     Node n = new Node()
                     {
                         x = x,
                         y = y,
                         worldPosition = tp
                     };
-
                     grid[x, y] = n;
-
                     availableNodes.Add(n);
                     #region Visual
                     if (x % 2 != 0)
@@ -106,12 +110,19 @@ namespace Snakes
         {
             playerObj = new GameObject("Player");
             SpriteRenderer playerRender = playerObj.AddComponent<SpriteRenderer>();
+            playerSprite = CreateSprite(playerColor);
             playerRender.sprite = CreateSprite(playerColor);
             playerRender.sortingOrder = 1;
+
             playerObj.transform.position = GetNode(3, 3).worldPosition;
             playerNode = GetNode(3, 3);
-            playerObj.transform.position = playerNode.worldPosition;
+            PlacePlayerObject(playerObj, playerNode.worldPosition);
+            playerObj.transform.localScale = Vector3.one * .95f; 
+
+
+            tailParent = new GameObject("tailParent");
         }
+
         void PlaceCamera()
         {
             Node n = GetNode(maxWidth / 2, maxHeight / 2);
@@ -119,17 +130,21 @@ namespace Snakes
             p += Vector3.one * 5f;
             cameraHolder.position = n.worldPosition;
         }
-
         void CreateApple()
         {
             appleObj = new GameObject("Apple");
             SpriteRenderer appleRenderer = appleObj.AddComponent<SpriteRenderer>();
-            appleRenderer.sprite = CreateSprite(appleColor);
+            Texture2D txt = new Texture2D(1, 1);
+            txt.SetPixel(0, 0, Color.red);
+            txt.Apply();
+            txt.filterMode = FilterMode.Point;
+            Rect rect = new Rect(0, 0, 1, 1);
+            appleRenderer.sprite = Sprite.Create(txt, rect, Vector2.zero, 1, 0, SpriteMeshType.FullRect);
+
             appleRenderer.sortingOrder = 1;
             RandomApple();
         }
         #endregion
-
         #region Updade
         private void Update()
         {
@@ -139,6 +154,7 @@ namespace Snakes
             if (timer > moveRate)
             {
                 timer = 0;
+                curDirection = targetDirection;
                 MovePlayer();
             }
 
@@ -154,21 +170,30 @@ namespace Snakes
         {
             if (up)
             {
-                curDirection = Direction.up;
+                SetDirection(Direction.up);
             }
             else if (down)
             {
-                curDirection = Direction.down;
+                SetDirection(Direction.down);
             }
             else if (left)
             {
-                curDirection = Direction.left;
+                SetDirection(Direction.left);
             }
             else if (right)
             {
-                curDirection = Direction.right;
+                SetDirection(Direction.right);
             }
         }
+
+        void SetDirection(Direction d)
+        {
+            if (!isOpposite(d))
+            {
+                targetDirection = d;
+            }
+        }
+
         void MovePlayer()
         {
             int x = 0;
@@ -195,35 +220,110 @@ namespace Snakes
             }
             else
             {
-                bool isScore = false;
-                if (targetNode == appleNode)
+                if (isTailNode(targetNode))
                 {
-                    //You scored
-                    isScore = true;
-
-                }
-
-                availableNodes.Remove(playerNode);
-                playerObj.transform.position = targetNode.worldPosition;
-                playerNode = targetNode;
-                availableNodes.Add(playerNode);
-
-                //move tail
-
-                if (isScore)
-                {
-                    if (availableNodes.Count > 0)
-                        RandomApple();
+                    //GameOver
                 }
                 else
                 {
-                    //you Won
+
+
+
+                    bool isScore = false;
+                    if (targetNode == appleNode)
+                    {
+                        //You scored
+                        isScore = true;
+
+                    }
+                    Node previousNode = playerNode;
+                    availableNodes.Add(playerNode);
+
+                    if (isScore)
+                    {
+                        tail.Add(CreateTailNode(previousNode.x, previousNode.y));
+                        availableNodes.Remove(previousNode);
+                    }
+                    MoveTail();
+
+                    PlacePlayerObject(playerObj, targetNode.worldPosition);
+                    playerNode = targetNode;
+                    availableNodes.Remove(playerNode);
+                    if (isScore)
+                    {
+                        if (availableNodes.Count > 0)
+                        {
+                            RandomApple();
+                        }
+                        else
+                        {
+                            //you Won
+                        }
+                    }
                 }
             }
         }
+        void MoveTail()
+        {
+            Node prevNode = null;
+            for (int i = 0; i < tail.Count; i++)
+            {
+                SpecialNode p = tail[i];
+                availableNodes.Add(p.node);
+                if (i == 0)
+                {
+                    prevNode = p.node;
+                    p.node = playerNode;
+                }
+                else
+                {
+                    Node prev = p.node;
+                    p.node = prevNode;
+                    prevNode = prev;
+                }
+                availableNodes.Remove(p.node);
+                PlacePlayerObject(p.obj, p.node.worldPosition);
 
+            }
+        }
         #endregion
+
         #region Utilities
+
+        bool isOpposite(Direction d)
+        {
+            switch (d)
+            {
+                default:
+                case Direction.up:
+                    if (curDirection == Direction.down)
+                        return true;
+                    else
+                        return false;
+                case Direction.down:
+                    if (curDirection == Direction.up)
+                        return true;
+                    else
+                        return false;
+                case Direction.left:
+                    if (curDirection == Direction.right)
+                        return true;
+                    else
+                        return false;
+                case Direction.right:
+                    if (curDirection == Direction.left)
+                        return true;
+                    else
+                        return false;
+            }
+        }
+
+        void PlacePlayerObject(GameObject obj, Vector3 pos)
+        {
+            pos += Vector3.one * .5f;
+            obj.transform.position = pos;
+        }
+
         Node GetNode(int x, int y)
         {
             if (x < 0 || x > maxWidth - 1 || y < 0 || y > maxHeight - 1)
@@ -240,7 +340,7 @@ namespace Snakes
             txt.Apply();
             txt.filterMode = FilterMode.Point;
             Rect rect = new Rect(0, 0, 1, 1);
-            return Sprite.Create(txt, rect, Vector2.one * 1f, 1, 0, SpriteMeshType.FullRect);
+            return Sprite.Create(txt, rect, Vector2.one * .5f, 1, 0, SpriteMeshType.FullRect);
         }
 
         void RandomApple()
@@ -249,6 +349,35 @@ namespace Snakes
             Node n = availableNodes[ran];
             appleObj.transform.position = n.worldPosition;
             appleNode = n;
+        }
+
+        bool isTailNode(Node n)
+        {
+            for (int i = 0; i < tail.Count; i++)
+            {
+                if (tail[i].node == n)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        SpecialNode CreateTailNode(int x, int y)
+        {
+            SpecialNode s = new SpecialNode();
+            s.node = GetNode(x, y);
+            s.obj = new GameObject();
+            s.obj.transform.parent = tailParent.transform;
+            s.obj.transform.position = s.node.worldPosition;
+            s.obj.transform.localScale = Vector3.one * .7f;
+            SpriteRenderer r = s.obj.AddComponent<SpriteRenderer>();
+            r.sprite = playerSprite;
+            r.sortingOrder = 1;
+
+
+
+            return s;
         }
         #endregion
     }
