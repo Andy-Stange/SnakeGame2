@@ -1580,7 +1580,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 409430638}
-        m_MethodName: PlayGame
+        m_MethodName: PlayGameEasy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2595,7 +2595,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 409430638}
-        m_MethodName: PlayGame
+        m_MethodName: PlayGameMedium
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2918,7 +2918,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 409430638}
-        m_MethodName: PlayGame
+        m_MethodName: PlayGameHard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

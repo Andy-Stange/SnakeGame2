@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Snakes;
 
-namespace Snakes
+namespace Hard
 {
-    public class GameManager : MonoBehaviour
+    public class HardScript : MonoBehaviour
     {
         public int maxHeight = 20;
         public int maxWidth = 20;
@@ -17,25 +18,29 @@ namespace Snakes
         public Color playerColor = Color.gray;
         public Transform cameraHolder;
 
+        GameObject RockObj;
         GameObject playerObj;
         GameObject tailParent;
         GameObject appleObj;
         Node playerNode;
         Node prevPlayerNode;
         Node appleNode;
+        Node RockNode;
         Sprite playerSprite;
+
 
         public Text currentScoreText;
         public Text highScoreText;
 
 
-        List<Node> availableNodes = new List<Node>();
 
         GameObject mapObject;
         SpriteRenderer mapRenderer;
 
         Node[,] grid;
 
+        List<Node> availableNodes = new List<Node>();
+        List<Node> RockNodes = new List<Node>();
         List<SpecialNode> tail = new List<SpecialNode>();
 
         bool up, left, right, down;
@@ -46,7 +51,7 @@ namespace Snakes
         public bool isGameOver;
         public bool isFirstInput;
 
-        public float moveRate = 0.5f;
+        public float moveRate = 0.3f;
         float timer;
 
         Direction targetDirection;
@@ -64,7 +69,7 @@ namespace Snakes
         #region Init
         private void Start()
         {
-            
+
             onStart.Invoke();
         }
         public void StartNewGame()
@@ -81,20 +86,25 @@ namespace Snakes
         }
         public void ClearReferences()
         {
-            if(mapObject != null)
+            if (mapObject != null)
                 Destroy(mapObject);
 
-            if(playerObj != null)
+            if (playerObj != null)
                 Destroy(playerObj);
 
-            if(appleObj != null)
+            if (appleObj != null)
                 Destroy(appleObj);
+
+            if (RockObj != null)
+                Destroy(RockObj);
 
             foreach (var t in tail)
             {
-                if(t.obj != null)
+                if (t.obj != null)
                     Destroy(t.obj);
             }
+
+            RockNodes.Clear();
             tail.Clear();
             availableNodes.Clear();
             grid = null;
@@ -164,7 +174,7 @@ namespace Snakes
             playerObj.transform.position = GetNode(3, 3).worldPosition;
             playerNode = GetNode(3, 3);
             PlacePlayerObject(playerObj, playerNode.worldPosition);
-            playerObj.transform.localScale = Vector3.one * .95f; 
+            playerObj.transform.localScale = Vector3.one * .95f;
 
 
             tailParent = new GameObject("tailParent");
@@ -198,9 +208,8 @@ namespace Snakes
             {
                 if (Input.GetKeyDown(KeyCode.R))
                     onStart.Invoke();
-                else if(Input.GetKeyDown(KeyCode.B))
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-
+                else if (Input.GetKeyDown(KeyCode.B))
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 3);
                 return;
             }
 
@@ -284,6 +293,11 @@ namespace Snakes
                 //game Over
                 onGameOver.Invoke();
             }
+            else if(isRockNode(targetNode))
+            {
+                //game Over
+                onGameOver.Invoke();
+            }
             else
             {
                 if (isTailNode(targetNode))
@@ -319,7 +333,7 @@ namespace Snakes
                     if (isScore)
                     {
                         currentScore++;
-                        if(currentScore >= highScore)
+                        if (currentScore >= highScore)
                         {
                             highScore = currentScore;
                         }
@@ -459,6 +473,51 @@ namespace Snakes
             currentScoreText.text = currentScore.ToString();
             highScoreText.text = highScore.ToString();
         }
-        #endregion
+        public void checkTail()
+        {
+            if (tail.Count % 5 == 0)
+            {
+                CreateRock();
+            }
+        }
+        public void CreateRock()
+        {
+            RockObj = new GameObject("Rock");
+            SpriteRenderer rockRenderer = RockObj.AddComponent<SpriteRenderer>();
+            Texture2D txt = new Texture2D(1, 1);
+            txt.SetPixel(0, 0, Color.gray);
+            txt.Apply();
+            txt.filterMode = FilterMode.Point;
+            Rect rect = new Rect(0, 0, 1, 1);
+            rockRenderer.sprite = Sprite.Create(txt, rect, Vector2.zero, 1, 0, SpriteMeshType.FullRect);
+
+            rockRenderer.sortingOrder = 1;
+            RandomRock();
+        }
+        void RandomRock()
+        {
+            int ran = Random.Range(0, availableNodes.Count);
+            Node n = availableNodes[ran];
+            RockObj.transform.position = n.worldPosition;
+            RockNode = n;
+            availableNodes.Remove(n);
+            RockNodes.Add(RockNode);
+        }
+        bool isRockNode(Node n)
+        {
+            for (int i = 0; i < RockNodes.Count; i++)
+            {
+                if (RockNodes[i] == n)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
+
+
+
+    #endregion
 }
+

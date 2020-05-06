@@ -1,4 +1,4 @@
-﻿
+﻿using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -200,6 +200,8 @@ namespace Medium
             {
                 if (Input.GetKeyDown(KeyCode.R))
                     onStart.Invoke();
+                else if (Input.GetKeyDown(KeyCode.B))
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2); 
                 return;
             }
 
