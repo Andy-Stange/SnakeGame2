@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Snakes
 {
     public class GameManager : MonoBehaviour
     {
         public int maxHeight = 20;
         public int maxWidth = 20;
+
         public Color color1;
         public Color color2;
+        public Color appleColor = Color.red;
         public Color playerColor = Color.gray;
 
         public Transform cameraHolder;
@@ -16,28 +19,32 @@ namespace Snakes
         GameObject playerObj;
         Node playerNode;
 
+        GameObject appleObj;
+        Node appleNode;
+
+        List<Node> availableNodes = new List<Node>();
+
+
         GameObject mapObject;
         SpriteRenderer mapRenderer;
 
         Node[,] grid;
-
         bool up, left, right, down;
-
         public float moveRate = 0.5f;
         float timer;
-
         Direction curDirection;
         public enum Direction
         {
             up, down, left, right
         }
-
         #region Init
         private void Start()
         {
             CreateMap();
             PlacePlayer();
             PlaceCamera();
+            CreateApple();
+            curDirection = Direction.right;
         }
 
         void CreateMap()
@@ -53,14 +60,16 @@ namespace Snakes
                     Vector3 tp = Vector3.zero;
                     tp.x = x + 1;
                     tp.y = y + 1;
-
                     Node n = new Node()
                     {
                         x = x,
                         y = y,
                         worldPosition = tp
                     };
+
                     grid[x, y] = n;
+
+                    availableNodes.Add(n);
                     #region Visual
                     if (x % 2 != 0)
                     {
@@ -88,31 +97,36 @@ namespace Snakes
                 }
             }
             txt.filterMode = FilterMode.Point;
-
             txt.Apply();
             Rect rect = new Rect(0, 0, maxWidth, maxHeight);
             Sprite sprite = Sprite.Create(txt, rect, Vector2.zero, 1, 0, SpriteMeshType.FullRect);
             mapRenderer.sprite = sprite;
         }
-
         void PlacePlayer()
         {
             playerObj = new GameObject("Player");
             SpriteRenderer playerRender = playerObj.AddComponent<SpriteRenderer>();
             playerRender.sprite = CreateSprite(playerColor);
             playerRender.sortingOrder = 1;
-
             playerObj.transform.position = GetNode(3, 3).worldPosition;
             playerNode = GetNode(3, 3);
             playerObj.transform.position = playerNode.worldPosition;
         }
-
         void PlaceCamera()
         {
             Node n = GetNode(maxWidth / 2, maxHeight / 2);
             Vector3 p = n.worldPosition;
             p += Vector3.one * 5f;
             cameraHolder.position = n.worldPosition;
+        }
+
+        void CreateApple()
+        {
+            appleObj = new GameObject("Apple");
+            SpriteRenderer appleRenderer = appleObj.AddComponent<SpriteRenderer>();
+            appleRenderer.sprite = CreateSprite(appleColor);
+            appleRenderer.sortingOrder = 1;
+            RandomApple();
         }
         #endregion
 
@@ -121,7 +135,6 @@ namespace Snakes
         {
             GetInput();
             SetPlayerDirection();
-
             timer += Time.deltaTime;
             if (timer > moveRate)
             {
@@ -129,7 +142,6 @@ namespace Snakes
                 MovePlayer();
             }
 
-            MovePlayer();
         }
         void GetInput()
         {
@@ -157,12 +169,10 @@ namespace Snakes
                 curDirection = Direction.right;
             }
         }
-
         void MovePlayer()
         {
             int x = 0;
             int y = 0;
-
             switch (curDirection)
             {
                 case Direction.up:
@@ -185,14 +195,34 @@ namespace Snakes
             }
             else
             {
+                bool isScore = false;
+                if (targetNode == appleNode)
+                {
+                    //You scored
+                    isScore = true;
+
+                }
+
+                availableNodes.Remove(playerNode);
                 playerObj.transform.position = targetNode.worldPosition;
                 playerNode = targetNode;
+                availableNodes.Add(playerNode);
+
+                //move tail
+
+                if (isScore)
+                {
+                    if (availableNodes.Count > 0)
+                        RandomApple();
+                }
+                else
+                {
+                    //you Won
+                }
             }
         }
 
-
         #endregion
-
         #region Utilities
         Node GetNode(int x, int y)
         {
@@ -211,6 +241,14 @@ namespace Snakes
             txt.filterMode = FilterMode.Point;
             Rect rect = new Rect(0, 0, 1, 1);
             return Sprite.Create(txt, rect, Vector2.one * 1f, 1, 0, SpriteMeshType.FullRect);
+        }
+
+        void RandomApple()
+        {
+            int ran = Random.Range(0, availableNodes.Count);
+            Node n = availableNodes[ran];
+            appleObj.transform.position = n.worldPosition;
+            appleNode = n;
         }
         #endregion
     }
