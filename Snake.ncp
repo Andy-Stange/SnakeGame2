@@ -1,0 +1,279 @@
+<Project>
+  <Name>Snake</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>GameManager</Name>
+        <Access>Public</Access>
+        <Location left="152" top="82" />
+        <Size width="304" height="1097" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int maxHeight</Member>
+        <Member type="Field">int maxWidth</Member>
+        <Member type="Field">Color color1</Member>
+        <Member type="Field">Color color2</Member>
+        <Member type="Field">Color appleColor</Member>
+        <Member type="Field">Color playerColor</Member>
+        <Member type="Field">Transfor cameraHolder</Member>
+        <Member type="Field">GameObject playerObj</Member>
+        <Member type="Field">GameObject tailParent</Member>
+        <Member type="Field">Gameobject appleObj</Member>
+        <Member type="Field">Node playerNode</Member>
+        <Member type="Field">Node prevPlayerNode</Member>
+        <Member type="Field">Node appleNode</Member>
+        <Member type="Field">Sprite playerSprite</Member>
+        <Member type="Field">Text currentScoreText</Member>
+        <Member type="Field">Text highScoreText</Member>
+        <Member type="Field">List&lt;Node&gt; availableNodes</Member>
+        <Member type="Field">List&lt;SpecialNode&gt; tail</Member>
+        <Member type="Field">Node[,] grid</Member>
+        <Member type="Field">bool up</Member>
+        <Member type="Field">bool down</Member>
+        <Member type="Field">bool left</Member>
+        <Member type="Field">bool right</Member>
+        <Member type="Field">int currentScore</Member>
+        <Member type="Field">int highScore</Member>
+        <Member type="Field">bool isGameover</Member>
+        <Member type="Field">bool isFirstInput</Member>
+        <Member type="Field">float moveRate</Member>
+        <Member type="Field">float timer</Member>
+        <Member type="Field">Direction targetDirection</Member>
+        <Member type="Field">Direction curDiretion</Member>
+        <Member type="Field">UnityEvent onStart</Member>
+        <Member type="Field">UnityEvent onGameOver</Member>
+        <Member type="Field">UnityEvent firstInput</Member>
+        <Member type="Field">UnityEvent onScore</Member>
+        <Member type="Field">Enum up</Member>
+        <Member type="Field">Enum down</Member>
+        <Member type="Field">Enum left</Member>
+        <Member type="Field">Enum right</Member>
+        <Member type="Method">private void Start()</Member>
+        <Member type="Method">public void ClearReferences()</Member>
+        <Member type="Method">void CreateMap()</Member>
+        <Member type="Method">void PlacePlayer()</Member>
+        <Member type="Method">void PlaceCamera()</Member>
+        <Member type="Method">void CreateApple()</Member>
+        <Member type="Method">private void Update()</Member>
+        <Member type="Method">void GetInput()</Member>
+        <Member type="Method">void SetPlayerDirection()</Member>
+        <Member type="Method">void SetDirection(Direction d)</Member>
+        <Member type="Method">void MovePlayer()</Member>
+        <Member type="Method">void MoveTail()</Member>
+        <Member type="Method">bool isOpposite(Direction d)</Member>
+        <Member type="Method">void PlacePlayerObject(GameObject obj, Vector3 pos)</Member>
+        <Member type="Method">Node GetNode(int x, int y)</Member>
+        <Member type="Method">Sprite CreateSprite(Color targetColor)</Member>
+        <Member type="Method">void RandomApple()</Member>
+        <Member type="Method">bool isTailNode(Node n)</Member>
+        <Member type="Method">SpecialNode CreateTailNode(int x, int y)</Member>
+        <Member type="Method">public void GameOver()</Member>
+        <Member type="Method">public void updateScore()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>HardScript</Name>
+        <Access>Public</Access>
+        <Location left="1039" top="10" />
+        <Size width="304" height="1165" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int maxHeight</Member>
+        <Member type="Field">int maxWidth</Member>
+        <Member type="Field">Color color1</Member>
+        <Member type="Field">Color color2</Member>
+        <Member type="Field">Color appleColor</Member>
+        <Member type="Field">Color playerColor</Member>
+        <Member type="Field">Transfor cameraHolder</Member>
+        <Member type="Field">GameObject playerObj</Member>
+        <Member type="Field">GameObject tailParent</Member>
+        <Member type="Field">Gameobject appleObj</Member>
+        <Member type="Field">Node playerNode</Member>
+        <Member type="Field">Node prevPlayerNode</Member>
+        <Member type="Field">Node appleNode</Member>
+        <Member type="Field">Sprite playerSprite</Member>
+        <Member type="Field">Text currentScoreText</Member>
+        <Member type="Field">Text highScoreText</Member>
+        <Member type="Field">List&lt;Node&gt; availableNodes</Member>
+        <Member type="Field">List&lt;SpecialNode&gt; tail</Member>
+        <Member type="Field">Node[,] grid</Member>
+        <Member type="Field">bool up</Member>
+        <Member type="Field">bool down</Member>
+        <Member type="Field">bool left</Member>
+        <Member type="Field">bool right</Member>
+        <Member type="Field">int currentScore</Member>
+        <Member type="Field">int highScore</Member>
+        <Member type="Field">bool isGameover</Member>
+        <Member type="Field">bool isFirstInput</Member>
+        <Member type="Field">float moveRate</Member>
+        <Member type="Field">float timer</Member>
+        <Member type="Field">Direction targetDirection</Member>
+        <Member type="Field">Direction curDiretion</Member>
+        <Member type="Field">UnityEvent onStart</Member>
+        <Member type="Field">UnityEvent onGameOver</Member>
+        <Member type="Field">UnityEvent firstInput</Member>
+        <Member type="Field">UnityEvent onScore</Member>
+        <Member type="Field">Enum up</Member>
+        <Member type="Field">Enum down</Member>
+        <Member type="Field">Enum left</Member>
+        <Member type="Field">Enum right</Member>
+        <Member type="Method">private void Start()</Member>
+        <Member type="Method">public void ClearReferences()</Member>
+        <Member type="Method">void CreateMap()</Member>
+        <Member type="Method">void PlacePlayer()</Member>
+        <Member type="Method">void PlaceCamera()</Member>
+        <Member type="Method">void CreateApple()</Member>
+        <Member type="Method">private void Update()</Member>
+        <Member type="Method">void GetInput()</Member>
+        <Member type="Method">void SetPlayerDirection()</Member>
+        <Member type="Method">void SetDirection(Direction d)</Member>
+        <Member type="Method">void MovePlayer()</Member>
+        <Member type="Method">void MoveTail()</Member>
+        <Member type="Method">bool isOpposite(Direction d)</Member>
+        <Member type="Method">void PlacePlayerObject(GameObject obj, Vector3 pos)</Member>
+        <Member type="Method">Node GetNode(int x, int y)</Member>
+        <Member type="Method">Sprite CreateSprite(Color targetColor)</Member>
+        <Member type="Method">void RandomApple()</Member>
+        <Member type="Method">bool isTailNode(Node n)</Member>
+        <Member type="Method">SpecialNode CreateTailNode(int x, int y)</Member>
+        <Member type="Method">public void GameOver()</Member>
+        <Member type="Method">public void updateScore()</Member>
+        <Member type="Method">void checkTail()</Member>
+        <Member type="Method">void RandomRock()</Member>
+        <Member type="Method">bool isRockNode()</Member>
+        <Member type="Method">public void CreateRock()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MediumScript</Name>
+        <Access>Public</Access>
+        <Location left="611" top="82" />
+        <Size width="304" height="1097" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int maxHeight</Member>
+        <Member type="Field">int maxWidth</Member>
+        <Member type="Field">Color color1</Member>
+        <Member type="Field">Color color2</Member>
+        <Member type="Field">Color appleColor</Member>
+        <Member type="Field">Color playerColor</Member>
+        <Member type="Field">Transfor cameraHolder</Member>
+        <Member type="Field">GameObject playerObj</Member>
+        <Member type="Field">GameObject tailParent</Member>
+        <Member type="Field">Gameobject appleObj</Member>
+        <Member type="Field">Node playerNode</Member>
+        <Member type="Field">Node prevPlayerNode</Member>
+        <Member type="Field">Node appleNode</Member>
+        <Member type="Field">Sprite playerSprite</Member>
+        <Member type="Field">Text currentScoreText</Member>
+        <Member type="Field">Text highScoreText</Member>
+        <Member type="Field">List&lt;Node&gt; availableNodes</Member>
+        <Member type="Field">List&lt;SpecialNode&gt; tail</Member>
+        <Member type="Field">Node[,] grid</Member>
+        <Member type="Field">bool up</Member>
+        <Member type="Field">bool down</Member>
+        <Member type="Field">bool left</Member>
+        <Member type="Field">bool right</Member>
+        <Member type="Field">int currentScore</Member>
+        <Member type="Field">int highScore</Member>
+        <Member type="Field">bool isGameover</Member>
+        <Member type="Field">bool isFirstInput</Member>
+        <Member type="Field">float moveRate</Member>
+        <Member type="Field">float timer</Member>
+        <Member type="Field">Direction targetDirection</Member>
+        <Member type="Field">Direction curDiretion</Member>
+        <Member type="Field">UnityEvent onStart</Member>
+        <Member type="Field">UnityEvent onGameOver</Member>
+        <Member type="Field">UnityEvent firstInput</Member>
+        <Member type="Field">UnityEvent onScore</Member>
+        <Member type="Field">Enum up</Member>
+        <Member type="Field">Enum down</Member>
+        <Member type="Field">Enum left</Member>
+        <Member type="Field">Enum right</Member>
+        <Member type="Method">private void Start()</Member>
+        <Member type="Method">public void ClearReferences()</Member>
+        <Member type="Method">void CreateMap()</Member>
+        <Member type="Method">void PlacePlayer()</Member>
+        <Member type="Method">void PlaceCamera()</Member>
+        <Member type="Method">void CreateApple()</Member>
+        <Member type="Method">private void Update()</Member>
+        <Member type="Method">void GetInput()</Member>
+        <Member type="Method">void SetPlayerDirection()</Member>
+        <Member type="Method">void SetDirection(Direction d)</Member>
+        <Member type="Method">void MovePlayer()</Member>
+        <Member type="Method">void MoveTail()</Member>
+        <Member type="Method">bool isOpposite(Direction d)</Member>
+        <Member type="Method">void PlacePlayerObject(GameObject obj, Vector3 pos)</Member>
+        <Member type="Method">Node GetNode(int x, int y)</Member>
+        <Member type="Method">Sprite CreateSprite(Color targetColor)</Member>
+        <Member type="Method">void RandomApple()</Member>
+        <Member type="Method">bool isTailNode(Node n)</Member>
+        <Member type="Method">SpecialNode CreateTailNode(int x, int y)</Member>
+        <Member type="Method">public void GameOver()</Member>
+        <Member type="Method">public void updateScore()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Node</Name>
+        <Access>Public</Access>
+        <Location left="404" top="1411" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int x</Member>
+        <Member type="Field">int y</Member>
+        <Member type="Field">Vector3 worldPosition</Member>
+        <Member type="Method">public void Node()</Member>
+        <Member type="Method">public void Node()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SpecialNode</Name>
+        <Access>Public</Access>
+        <Location left="683" top="1411" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">Node node</Member>
+        <Member type="Field">GameObject obj</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="3" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>0...1*</StartRole>
+        <EndRole>1</EndRole>
+      </Relationship>
+      <Relationship type="Association" first="3" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndRole>1</EndRole>
+      </Relationship>
+      <Relationship type="Association" first="3" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndRole>1</EndRole>
+      </Relationship>
+      <Relationship type="Association" first="4" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="4" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>0...1*</StartRole>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
